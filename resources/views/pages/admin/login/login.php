@@ -19,11 +19,13 @@ new #[Layout('layouts::admin')] #[Title('Admin Login')] class extends Component
     {
         if (empty($this->email) || empty($this->password)) {
             $this->js("Flux.toast({ text: 'Email and password are required.', variant: 'danger' })");
+
             return;
         }
 
         if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             $this->js("Flux.toast({ text: 'Invalid credentials.', variant: 'danger' })");
+
             return;
         }
 
@@ -32,6 +34,7 @@ new #[Layout('layouts::admin')] #[Title('Admin Login')] class extends Component
         if (! $user->hasRole('admin')) {
             Auth::logout();
             $this->js("Flux.toast({ text: 'Invalid credentials.', variant: 'danger' })");
+
             return;
         }
 

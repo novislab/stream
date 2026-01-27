@@ -6,8 +6,3 @@ new #[Layout('layouts::admin')] #[Title('Admin Settings')] class extends Compone
 {
     //
 };
-?>
-
-<div>
-    {{-- It is quality rather than quantity that matters. - Lucius Annaeus Seneca --}}
-</div>
