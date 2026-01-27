@@ -271,6 +271,24 @@ Use these attributes on component classes and properties:
 
 ## Testing Livewire Components
 
+### Pest Configuration for View-Based Components
+
+Update `tests/Pest.php` to include view-based component tests:
+
+```php
+pest()->extend(Tests\TestCase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->in('Feature', '../resources/views');
+```
+
+Update `phpunit.xml` to add a component test suite:
+
+```xml
+<testsuite name="Components">
+    <directory suffix=".test.php">resources/views</directory>
+</testsuite>
+```
+
 ### Creating Your First Test
 
 Generate a test file alongside a component using the `--test` flag:
@@ -327,7 +345,47 @@ it('can create a new post', function () {
 });
 ```
 
-> Use browser tests for critical user flows. For most testing, `Livewire::test()` is faster and sufficient.
+#### Using data-test Attributes
+
+Add `data-test` attributes to elements for reliable test selectors:
+
+```blade
+<flux:input data-test="email-input" wire:model="email" />
+<flux:button data-test="submit-button" type="submit">Save</flux:button>
+```
+
+In browser tests, use the `@` selector shorthand:
+
+```php
+it('can login', function () {
+    Livewire::visit('admin.login')
+        ->type('@email-input', 'admin@test.com')
+        ->type('@password-input', 'password123')
+        ->press('@login-button')
+        ->assertPathIs('/admin/dashboard');
+});
+```
+
+#### Browser Test Assertions
+
+| Method | Description |
+|--------|-------------|
+| `->visit('/url')` | Navigate to URL |
+| `->type('@selector', 'text')` | Type into input |
+| `->press('@button')` | Click a button |
+| `->click('@element')` | Click any element |
+| `->check('@checkbox')` | Check a checkbox |
+| `->uncheck('@checkbox')` | Uncheck a checkbox |
+| `->select('@select', 'value')` | Select dropdown option |
+| `->assertSee('text')` | Assert text visible |
+| `->assertDontSee('text')` | Assert text not visible |
+| `->assertPathIs('/path')` | Assert current URL path |
+| `->assertVisible('@element')` | Assert element visible |
+| `->assertNotVisible('@element')` | Assert element hidden |
+| `->screenshot('name')` | Take screenshot for debugging |
+| `->pause(1000)` | Pause execution (ms) |
+
+> **When to use browser tests**: Use for critical user flows and complex JS interactions. For most component testing, `Livewire::test()` is faster and sufficient.
 
 ### Testing Views
 
@@ -353,6 +411,24 @@ it('passes all posts to the view', function () {
         });
 });
 ```
+
+### Testing HTML with data-test Attributes
+
+In component tests (not browser tests), use `assertSeeHtml()` to verify data-test attributes:
+
+```php
+it('shows email input', function () {
+    Livewire::test('pages::admin.login')
+        ->assertSeeHtml('data-test="email-input"');
+});
+
+it('shows login button', function () {
+    Livewire::test('pages::admin.login')
+        ->assertSeeHtml('data-test="login-button"');
+});
+```
+
+> **Note**: The `@` selector syntax only works in browser tests (`Livewire::visit()`). For component tests (`Livewire::test()`), use `assertSeeHtml()` with the full attribute string.
 
 ### Testing with Authentication
 
