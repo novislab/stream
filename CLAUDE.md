@@ -270,6 +270,666 @@ Use these attributes on component classes and properties:
 | `@island` | Mark component as isolated island (partial hydration) |
 | `@placeholder` | Define placeholder content for lazy-loaded components |
 
+---
+
+## Testing Livewire Components
+
+### Creating Your First Test
+
+Generate a test file alongside a component using the `--test` flag:
+
+```bash
+php artisan make:livewire post.create --test
+```
+
+For multi-file components, this creates a test at `resources/views/components/post/create.test.php`:
+
+```php
+<?php
+
+use Livewire\Livewire;
+
+it('renders successfully', function () {
+    Livewire::test('post.create')
+        ->assertStatus(200);
+});
+```
+
+For class-based components, a PHPUnit test is created at `tests/Feature/Livewire/Post/CreateTest.php`.
+
+### Testing a Page Contains a Component
+
+```php
+it('component exists on the page', function () {
+    $this->get('/posts/create')
+        ->assertSeeLivewire('post.create');
+});
+```
+
+> **Smoke tests provide huge value** - They ensure no catastrophic problems exist, require little maintenance, and give confidence that pages render successfully.
+
+### Browser Testing (Pest v4 + Playwright)
+
+Install browser testing:
+
+```bash
+composer require pestphp/pest-plugin-browser --dev
+npm install playwright@latest
+npx playwright install
+```
+
+Use `Livewire::visit()` for real browser tests:
+
+```php
+it('can create a new post', function () {
+    Livewire::visit('post.create')
+        ->type('[wire\:model="title"]', 'My first post')
+        ->type('[wire\:model="content"]', 'This is the content')
+        ->press('Save')
+        ->assertSee('Post created successfully');
+});
+```
+
+> Use browser tests for critical user flows. For most testing, `Livewire::test()` is faster and sufficient.
+
+### Testing Views
+
+```php
+use App\Models\Post;
+
+it('displays posts', function () {
+    Post::factory()->create(['title' => 'My first post']);
+    Post::factory()->create(['title' => 'My second post']);
+
+    Livewire::test('show-posts')
+        ->assertSee('My first post')
+        ->assertSee('My second post');
+});
+
+// Assert view data
+it('passes all posts to the view', function () {
+    Post::factory()->count(3)->create();
+
+    Livewire::test('show-posts')
+        ->assertViewHas('posts', function ($posts) {
+            return count($posts) === 3;
+        });
+});
+```
+
+### Testing with Authentication
+
+```php
+use App\Models\User;
+use App\Models\Post;
+
+it('user only sees their own posts', function () {
+    $user = User::factory()
+        ->has(Post::factory()->count(3))
+        ->create();
+
+    $stranger = User::factory()
+        ->has(Post::factory()->count(2))
+        ->create();
+
+    Livewire::actingAs($user)
+        ->test('show-posts')
+        ->assertViewHas('posts', function ($posts) {
+            return count($posts) === 3;
+        });
+});
+```
+
+### Testing Properties
+
+```php
+it('can set the title property', function () {
+    Livewire::test('post.create')
+        ->set('title', 'My amazing post')
+        ->assertSet('title', 'My amazing post');
+});
+
+// Initialize with mount parameters
+it('title field is populated when editing', function () {
+    $post = Post::factory()->create(['title' => 'Existing post title']);
+
+    Livewire::test('post.edit', ['post' => $post])
+        ->assertSet('title', 'Existing post title');
+});
+```
+
+### Setting URL Parameters
+
+```php
+it('can search posts via url query string', function () {
+    Post::factory()->create(['title' => 'Laravel testing']);
+    Post::factory()->create(['title' => 'Vue components']);
+
+    Livewire::withQueryParams(['search' => 'Laravel'])
+        ->test('search-posts')
+        ->assertSee('Laravel testing')
+        ->assertDontSee('Vue components');
+});
+```
+
+### Setting Cookies
+
+```php
+it('loads discount token from cookie', function () {
+    Livewire::withCookies(['discountToken' => 'SUMMER2024'])
+        ->test('cart')
+        ->assertSet('discountToken', 'SUMMER2024');
+});
+```
+
+### Calling Actions
+
+```php
+use App\Models\Post;
+
+it('can create a post', function () {
+    expect(Post::count())->toBe(0);
+
+    Livewire::test('post.create')
+        ->set('title', 'My new post')
+        ->set('content', 'Post content here')
+        ->call('save');
+
+    expect(Post::count())->toBe(1);
+});
+
+// With parameters
+Livewire::test('post.show')
+    ->call('deletePost', $postId);
+```
+
+### Testing Validation
+
+```php
+it('title field is required', function () {
+    Livewire::test('post.create')
+        ->set('title', '')
+        ->call('save')
+        ->assertHasErrors('title');
+});
+
+// Test specific rules
+it('title must be at least 3 characters', function () {
+    Livewire::test('post.create')
+        ->set('title', 'ab')
+        ->call('save')
+        ->assertHasErrors(['title' => ['min:3']]);
+});
+```
+
+### Testing Authorization
+
+```php
+use App\Models\User;
+use App\Models\Post;
+
+it('cannot update another users post', function () {
+    $user = User::factory()->create();
+    $stranger = User::factory()->create();
+    $post = Post::factory()->for($stranger)->create();
+
+    Livewire::actingAs($user)
+        ->test('post.edit', ['post' => $post])
+        ->set('title', 'Hacked!')
+        ->call('save')
+        ->assertForbidden();
+});
+```
+
+### Testing Redirects
+
+```php
+it('redirects to posts index after creating', function () {
+    Livewire::test('post.create')
+        ->set('title', 'New post')
+        ->set('content', 'Content here')
+        ->call('save')
+        ->assertRedirect('/posts');
+});
+
+// Named routes
+->assertRedirect(route('posts.index'));
+->assertRedirectToRoute('posts.index');
+```
+
+### Testing Events
+
+```php
+it('dispatches event when post is created', function () {
+    Livewire::test('post.create')
+        ->set('title', 'New post')
+        ->call('save')
+        ->assertDispatched('post-created');
+});
+
+// Test event communication between components
+it('updates post count when event is dispatched', function () {
+    $badge = Livewire::test('post-count-badge')
+        ->assertSee('0');
+
+    Livewire::test('post.create')
+        ->set('title', 'New post')
+        ->call('save')
+        ->assertDispatched('post-created');
+
+    $badge->dispatch('post-created')
+        ->assertSee('1');
+});
+
+// Assert with parameters
+it('dispatches notification when deleting post', function () {
+    Livewire::test('post.show')
+        ->call('delete', postId: 3)
+        ->assertDispatched('notify', message: 'Post deleted');
+});
+
+// Complex assertions with closure
+->assertDispatched('notify', function ($event, $params) {
+    return ($params['message'] ?? '') === 'Post deleted';
+});
+```
+
+### PHPUnit Example
+
+```php
+<?php
+
+namespace Tests\Feature\Livewire;
+
+use Livewire\Livewire;
+use App\Models\Post;
+use Tests\TestCase;
+
+class CreatePostTest extends TestCase
+{
+    public function test_can_create_post()
+    {
+        $this->assertEquals(0, Post::count());
+
+        Livewire::test('post.create')
+            ->set('title', 'My new post')
+            ->set('content', 'Post content')
+            ->call('save');
+
+        $this->assertEquals(1, Post::count());
+    }
+
+    public function test_title_is_required()
+    {
+        Livewire::test('post.create')
+            ->set('title', '')
+            ->call('save')
+            ->assertHasErrors('title');
+    }
+}
+```
+
+### All Available Testing Methods
+
+#### Setup Methods
+
+| Method | Description |
+|--------|-------------|
+| `Livewire::test('post.create')` | Test the post.create component |
+| `Livewire::test(UpdatePost::class, ['post' => $post])` | Test with parameters passed to mount() |
+| `Livewire::actingAs($user)` | Set authenticated user |
+| `Livewire::withQueryParams(['search' => '...'])` | Set URL query parameters |
+| `Livewire::withCookie('name', 'value')` | Set a cookie |
+| `Livewire::withCookies(['color' => 'blue'])` | Set multiple cookies |
+| `Livewire::withHeaders(['X-Header' => 'value'])` | Set custom headers |
+| `Livewire::withoutLazyLoading()` | Disable lazy loading |
+
+#### Interacting with Components
+
+| Method | Description |
+|--------|-------------|
+| `set('title', '...')` | Set a property value |
+| `set(['title' => '...', 'content' => '...'])` | Set multiple properties |
+| `toggle('sortAsc')` | Toggle boolean property |
+| `call('save')` | Call an action/method |
+| `call('remove', $postId)` | Call method with parameters |
+| `refresh()` | Trigger component re-render |
+| `dispatch('post-created')` | Dispatch an event |
+| `dispatch('post-created', postId: $post->id)` | Dispatch with parameters |
+
+#### Assertions
+
+| Method | Description |
+|--------|-------------|
+| `assertSet('title', '...')` | Property equals value |
+| `assertNotSet('title', '...')` | Property does not equal value |
+| `assertCount('posts', 3)` | Property contains 3 items |
+| `assertSee('...')` | Text in rendered HTML |
+| `assertDontSee('...')` | Text not in rendered HTML |
+| `assertSeeHtml('<div>...</div>')` | Raw HTML present |
+| `assertDontSeeHtml('<div>...</div>')` | Raw HTML not present |
+| `assertSeeInOrder(['first', 'second'])` | Strings appear in order |
+| `assertDispatched('post-created')` | Event was dispatched |
+| `assertNotDispatched('post-created')` | Event was not dispatched |
+| `assertHasErrors('title')` | Validation failed for property |
+| `assertHasErrors(['title' => ['required']])` | Specific rules failed |
+| `assertHasNoErrors('title')` | No validation errors |
+| `assertRedirect()` | Redirect was triggered |
+| `assertRedirect('/posts')` | Redirect to specific URL |
+| `assertRedirectToRoute('posts.index')` | Redirect to named route |
+| `assertNoRedirect()` | No redirect triggered |
+| `assertViewHas('posts')` | Data passed to view |
+| `assertViewHas('postCount', 3)` | View data has value |
+| `assertViewIs('livewire.show-posts')` | Specific view rendered |
+| `assertFileDownloaded()` | File download triggered |
+| `assertFileDownloaded($filename)` | Specific file downloaded |
+| `assertUnauthorized()` | Authorization exception (401) |
+| `assertForbidden()` | Access forbidden (403) |
+| `assertStatus(500)` | Specific status code |
+
+---
+
+## Security & Authorization
+
+### Protected Properties
+
+```php
+use Livewire\Attributes\Locked;
+
+new class extends Component {
+    #[Locked]
+    public int $userId; // Cannot be modified from frontend
+
+    public function mount(): void
+    {
+        $this->userId = auth()->id();
+    }
+};
+```
+
+### Authorization in Components
+
+```php
+new class extends Component {
+    public Post $post;
+
+    public function mount(Post $post): void
+    {
+        // Authorize on mount
+        $this->authorize('view', $post);
+        $this->post = $post;
+    }
+
+    public function delete(): void
+    {
+        // Authorize before action
+        $this->authorize('delete', $this->post);
+        $this->post->delete();
+    }
+};
+```
+
+### Validation
+
+```php
+use Livewire\Attributes\Validate;
+
+new class extends Component {
+    #[Validate('required|string|max:255')]
+    public string $title = '';
+
+    #[Validate('required|email|unique:users,email')]
+    public string $email = '';
+
+    public function save(): void
+    {
+        $this->validate(); // Validates all #[Validate] properties
+
+        // Or validate specific fields
+        $this->validateOnly('email');
+    }
+};
+```
+
+### Rate Limiting
+
+```php
+use Illuminate\Support\Facades\RateLimiter;
+
+new class extends Component {
+    public function sendMessage(): void
+    {
+        $key = 'send-message:' . auth()->id();
+
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $this->addError('message', 'Too many attempts. Try again later.');
+            return;
+        }
+
+        RateLimiter::hit($key, 60); // 5 attempts per minute
+
+        // Send message...
+    }
+};
+```
+
+---
+
+## Common Patterns
+
+### Modals
+
+```php
+// Parent component
+new class extends Component {
+    public bool $showModal = false;
+
+    #[On('close-modal')]
+    public function closeModal(): void
+    {
+        $this->showModal = false;
+    }
+};
+```
+
+```blade
+{{-- Parent view --}}
+<flux:button wire:click="$set('showModal', true)">Open Modal</flux:button>
+
+<flux:modal wire:model="showModal">
+    <livewire:edit-user :user="$user" />
+</flux:modal>
+```
+
+```php
+// Child component dispatches event to close
+public function save(): void
+{
+    $this->user->save();
+    $this->dispatch('close-modal');
+}
+```
+
+### Search with Debounce
+
+```php
+use Livewire\Attributes\Url;
+use Livewire\WithPagination;
+
+new class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage(); // Reset pagination on search
+    }
+
+    #[Computed]
+    public function users()
+    {
+        return User::query()
+            ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->paginate(10);
+    }
+};
+```
+
+```blade
+<flux:input wire:model.live.debounce.300ms="search" placeholder="Search..." />
+
+@foreach($this->users as $user)
+    <div wire:key="user-{{ $user->id }}">{{ $user->name }}</div>
+@endforeach
+
+{{ $this->users->links() }}
+```
+
+### Infinite Scroll
+
+```php
+new class extends Component {
+    public int $perPage = 10;
+
+    #[Computed]
+    public function posts()
+    {
+        return Post::latest()->take($this->perPage)->get();
+    }
+
+    public function loadMore(): void
+    {
+        $this->perPage += 10;
+    }
+};
+```
+
+```blade
+@foreach($this->posts as $post)
+    <div wire:key="post-{{ $post->id }}">{{ $post->title }}</div>
+@endforeach
+
+<div wire:intersect="loadMore">
+    <span wire:loading>Loading more...</span>
+</div>
+```
+
+### File Uploads
+
+```php
+use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
+
+new class extends Component {
+    use WithFileUploads;
+
+    #[Validate('image|max:1024')] // 1MB max
+    public $photo;
+
+    public function save(): void
+    {
+        $this->validate();
+        $path = $this->photo->store('photos', 'public');
+
+        auth()->user()->update(['avatar' => $path]);
+    }
+};
+```
+
+```blade
+<input type="file" wire:model="photo">
+
+@error('photo') <span>{{ $message }}</span> @enderror
+
+@if ($photo)
+    <img src="{{ $photo->temporaryUrl() }}" alt="Preview">
+@endif
+
+<flux:button wire:click="save" wire:loading.attr="disabled">
+    <span wire:loading.remove>Upload</span>
+    <span wire:loading>Uploading...</span>
+</flux:button>
+```
+
+### Events Between Components
+
+```php
+// Emitter component
+new class extends Component {
+    public function save(): void
+    {
+        $this->dispatch('post-created', postId: $post->id);
+
+        // Dispatch to specific component
+        $this->dispatch('refresh')->to(PostList::class);
+
+        // Dispatch to parent only
+        $this->dispatch('saved')->up();
+    }
+};
+
+// Listener component
+new class extends Component {
+    #[On('post-created')]
+    public function handlePostCreated(int $postId): void
+    {
+        // Handle the event
+    }
+
+    #[On('refresh')]
+    public function refresh(): void
+    {
+        // Refresh data
+    }
+};
+```
+
+=== .ai/git rules ===
+
+=== git rules ===
+
+## Git Commit Guidelines
+
+### Commit Strategy
+- Group related changes by file, folder, or feature.
+- Commit each group separately, one by one.
+- Do not bundle unrelated changes into a single commit.
+
+### Commit Messages
+- Keep messages simple and short (50 characters or less).
+- Use imperative mood: "Add", "Fix", "Update", "Remove".
+- Do not include AI co-author or attribution in commits.
+
+### Examples
+
+```bash
+# Good - grouped by feature/folder
+git commit -m "Add user authentication routes"
+git commit -m "Add login form component"
+git commit -m "Update user model with auth methods"
+
+# Bad - too many unrelated changes
+git commit -m "Add auth, fix styles, update readme, refactor utils"
+```
+
+### Commit Order
+1. Stage files for one feature or folder.
+2. Commit with a short message.
+3. Repeat for each group.
+
+```bash
+git add app/Models/User.php
+git commit -m "Add email verification to User model"
+
+git add resources/views/auth/
+git commit -m "Add auth blade templates"
+
+git add routes/web.php
+git commit -m "Add auth routes"
+```
+
 === foundation rules ===
 
 # Laravel Boost Guidelines
@@ -288,7 +948,8 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/mcp (MCP) - v0
 - laravel/pint (PINT) - v1
 - laravel/sail (SAIL) - v1
-- phpunit/phpunit (PHPUNIT) - v11
+- pestphp/pest (PEST) - v4
+- phpunit/phpunit (PHPUNIT) - v12
 - tailwindcss (TAILWINDCSS) - v4
 
 ## Conventions
@@ -542,22 +1203,101 @@ accordion, autocomplete, avatar, badge, brand, breadcrumbs, button, calendar, ca
 - You must run `vendor/bin/pint --dirty` before finalizing changes to ensure your code matches the project's expected style.
 - Do not run `vendor/bin/pint --test`, simply run `vendor/bin/pint` to fix any formatting issues.
 
-=== phpunit/core rules ===
+=== pest/core rules ===
 
-## PHPUnit
+## Pest
+### Testing
+- If you need to verify a feature is working, write or update a Unit / Feature test.
 
-- This application uses PHPUnit for testing. All tests must be written as PHPUnit classes. Use `php artisan make:test --phpunit {name}` to create a new test.
-- If you see a test using "Pest", convert it to PHPUnit.
-- Every time a test has been updated, run that singular test.
-- When the tests relating to your feature are passing, ask the user if they would like to also run the entire test suite to make sure everything is still passing.
+### Pest Tests
+- All tests must be written using Pest. Use `php artisan make:test --pest {name}`.
+- You must not remove any tests or test files from the tests directory without approval. These are not temporary or helper files - these are core to the application.
 - Tests should test all of the happy paths, failure paths, and weird paths.
-- You must not remove any tests or test files from the tests directory without approval. These are not temporary or helper files; these are core to the application.
+- Tests live in the `tests/Feature` and `tests/Unit` directories.
+- Pest tests look and behave like this:
+<code-snippet name="Basic Pest Test Example" lang="php">
+it('is true', function () {
+    expect(true)->toBeTrue();
+});
+</code-snippet>
 
 ### Running Tests
-- Run the minimal number of tests, using an appropriate filter, before finalizing.
+- Run the minimal number of tests using an appropriate filter before finalizing code edits.
 - To run all tests: `php artisan test --compact`.
 - To run all tests in a file: `php artisan test --compact tests/Feature/ExampleTest.php`.
 - To filter on a particular test name: `php artisan test --compact --filter=testName` (recommended after making a change to a related file).
+- When the tests relating to your changes are passing, ask the user if they would like to run the entire test suite to ensure everything is still passing.
+
+### Pest Assertions
+- When asserting status codes on a response, use the specific method like `assertForbidden` and `assertNotFound` instead of using `assertStatus(403)` or similar, e.g.:
+<code-snippet name="Pest Example Asserting postJson Response" lang="php">
+it('returns all', function () {
+    $response = $this->postJson('/api/docs', []);
+
+    $response->assertSuccessful();
+});
+</code-snippet>
+
+### Mocking
+- Mocking can be very helpful when appropriate.
+- When mocking, you can use the `Pest\Laravel\mock` Pest function, but always import it via `use function Pest\Laravel\mock;` before using it. Alternatively, you can use `$this->mock()` if existing tests do.
+- You can also create partial mocks using the same import or self method.
+
+### Datasets
+- Use datasets in Pest to simplify tests that have a lot of duplicated data. This is often the case when testing validation rules, so consider this solution when writing tests for validation rules.
+
+<code-snippet name="Pest Dataset Example" lang="php">
+it('has emails', function (string $email) {
+    expect($email)->not->toBeEmpty();
+})->with([
+    'james' => 'james@laravel.com',
+    'taylor' => 'taylor@laravel.com',
+]);
+</code-snippet>
+
+=== pest/v4 rules ===
+
+## Pest 4
+
+- Pest 4 is a huge upgrade to Pest and offers: browser testing, smoke testing, visual regression testing, test sharding, and faster type coverage.
+- Browser testing is incredibly powerful and useful for this project.
+- Browser tests should live in `tests/Browser/`.
+- Use the `search-docs` tool for detailed guidance on utilizing these features.
+
+### Browser Testing
+- You can use Laravel features like `Event::fake()`, `assertAuthenticated()`, and model factories within Pest 4 browser tests, as well as `RefreshDatabase` (when needed) to ensure a clean state for each test.
+- Interact with the page (click, type, scroll, select, submit, drag-and-drop, touch gestures, etc.) when appropriate to complete the test.
+- If requested, test on multiple browsers (Chrome, Firefox, Safari).
+- If requested, test on different devices and viewports (like iPhone 14 Pro, tablets, or custom breakpoints).
+- Switch color schemes (light/dark mode) when appropriate.
+- Take screenshots or pause tests for debugging when appropriate.
+
+### Example Tests
+
+<code-snippet name="Pest Browser Test Example" lang="php">
+it('may reset the password', function () {
+    Notification::fake();
+
+    $this->actingAs(User::factory()->create());
+
+    $page = visit('/sign-in'); // Visit on a real browser...
+
+    $page->assertSee('Sign In')
+        ->assertNoJavascriptErrors() // or ->assertNoConsoleLogs()
+        ->click('Forgot Password?')
+        ->fill('email', 'nuno@laravel.com')
+        ->click('Send Reset Link')
+        ->assertSee('We have emailed your password reset link!')
+
+    Notification::assertSent(ResetPassword::class);
+});
+</code-snippet>
+
+<code-snippet name="Pest Smoke Testing Example" lang="php">
+$pages = visit(['/', '/about', '/contact']);
+
+$pages->assertNoJavascriptErrors()->assertNoConsoleLogs();
+</code-snippet>
 
 === tailwindcss/core rules ===
 
