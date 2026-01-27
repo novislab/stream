@@ -204,4 +204,4 @@ describe('browser tests', function () {
             ->screenshot()
             ->assertSee('Admin Login');
     });
-})->skip(! function_exists('visit'), 'Browser testing not installed');
+});
