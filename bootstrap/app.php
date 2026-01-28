@@ -17,7 +17,23 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+            'guest' => \Illuminate\Auth\Middleware\RedirectIfAuthenticated::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ]);
+
+        $middleware->redirectGuestsTo(fn ($request) => $request->is('admin/*') || $request->is('admin')
+            ? route('admin.login')
+            : '/login'
+        );
+
+        $middleware->redirectUsersTo(fn ($request) => $request->is('admin/*') || $request->is('admin')
+            ? route('admin.dashboard')
+            : '/'
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
