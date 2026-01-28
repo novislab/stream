@@ -13,12 +13,15 @@
 </head>
 
 <body class="min-h-screen bg-white dark:bg-zinc-950 antialiased">
-
+    <x-admin.sidebar />
+    <x-admin.header />
     <flux:toast.group>
         <flux:toast />
     </flux:toast.group>
 
-    {{ $slot }}
+    <flux:main>
+        {{ $slot }}
+    </flux:main>
 
     @fluxScripts
 </body>

@@ -1,4 +1,4 @@
-<div class="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-900 px-4">
+<div class="min-h-screen flex justify-center">
     <form wire:submit="login" class="w-full max-w-md">
         @csrf
         <flux:card class="space-y-8">
