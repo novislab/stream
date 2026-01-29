@@ -6,5 +6,6 @@ Route::livewire('/login', 'pages::admin.login')->middleware('guest')->name('admi
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::livewire('/dashboard', 'pages::admin.dashboard')->name('admin.dashboard');
+    Route::livewire('/visitors', 'pages::admin.visitors')->name('admin.visitors');
     Route::livewire('/settings', 'pages::admin.settings')->name('admin.settings');
 });
