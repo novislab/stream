@@ -234,9 +234,7 @@ describe('component tests', function () {
         Livewire::actingAs($user)
             ->test('pages::admin.dashboard')
             ->call('loadData')
-            ->assertViewHas('stats', function ($stats) {
-                return count($stats) === 4;
-            });
+            ->assertViewHas('stats', fn ($stats) => count($stats) === 4);
     });
 
     it('computes unique visitors correctly', function () {

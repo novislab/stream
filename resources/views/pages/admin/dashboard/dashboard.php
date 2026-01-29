@@ -79,7 +79,7 @@ new #[Layout('layouts::admin')] #[Title('Admin Dashboard')] class extends Compon
             ->limit(5)
             ->get()
             ->map(fn ($row) => [
-                'url' => parse_url($row->url, PHP_URL_PATH) ?: '/',
+                'url' => parse_url((string) $row->url, PHP_URL_PATH) ?: '/',
                 'views' => $row->views,
             ])
             ->toArray();

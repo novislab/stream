@@ -17,7 +17,7 @@ new #[Layout('layouts::admin')] #[Title('Admin Login')] class extends Component
 
     public function login(): void
     {
-        if (empty($this->email) || empty($this->password)) {
+        if ($this->email === '' || $this->email === '0' || ($this->password === '' || $this->password === '0')) {
             $this->js("Flux.toast({ text: 'Email and password are required.', variant: 'danger' })");
 
             return;
