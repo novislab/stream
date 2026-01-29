@@ -2,6 +2,9 @@
 
 ## Git Commit Guidelines
 
+### Pre-Commit
+- Run `composer run format` before committing to ensure code style consistency.
+
 ### Commit Strategy
 - Group related changes by file, folder, or feature.
 - Commit each group separately, one by one.
@@ -16,6 +19,7 @@
 
 ```bash
 # Good - grouped by feature/folder
+composer run format
 git commit -m "Add user authentication routes"
 git commit -m "Add login form component"
 git commit -m "Update user model with auth methods"
@@ -25,11 +29,13 @@ git commit -m "Add auth, fix styles, update readme, refactor utils"
 ```
 
 ### Commit Order
-1. Stage files for one feature or folder.
-2. Commit with a short message.
-3. Repeat for each group.
+1. Run `composer run format`.
+2. Stage files for one feature or folder.
+3. Commit with a short message.
+4. Repeat for each group.
 
 ```bash
+composer run format
 git add app/Models/User.php
 git commit -m "Add email verification to User model"
 
