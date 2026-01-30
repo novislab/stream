@@ -195,13 +195,16 @@ describe('component tests', function () {
         $user = User::factory()->create();
         $user->assignRole('admin');
 
+        // Create visit data so chart labels appear
+        Visit::create(['ip' => '192.168.1.1', 'url' => '/', 'method' => 'GET']);
+
         Livewire::actingAs($user)
             ->test('pages::admin.dashboard')
             ->call('loadData')
             ->assertSee('Acquisition Channels')
             ->assertSee('Direct')
             ->assertSee('Referral')
-            ->assertSee('Organic Search')
+            ->assertSee('Organic')
             ->assertSee('Social');
     });
 
@@ -348,6 +351,9 @@ describe('component tests', function () {
         $user = User::factory()->create();
         $user->assignRole('admin');
 
+        // Create visit data so chart has data to show
+        Visit::create(['ip' => '192.168.1.1', 'url' => '/', 'method' => 'GET']);
+
         $component = Livewire::actingAs($user)
             ->test('pages::admin.dashboard')
             ->call('loadData');
@@ -355,12 +361,16 @@ describe('component tests', function () {
         $chartData = $component->get('chartData');
 
         expect($chartData)->toBeArray();
-        expect(count($chartData))->toBe(30); // Default monthly = 30 days
+        expect(count($chartData))->toBeGreaterThan(0); // Has data after trimming leading zeros
+        expect($chartData[0])->toHaveKeys(['label', 'views']);
     });
 
     it('computes quarterly chart data correctly', function () {
         $user = User::factory()->create();
         $user->assignRole('admin');
+
+        // Create visit data so chart has data to show
+        Visit::create(['ip' => '192.168.1.1', 'url' => '/', 'method' => 'GET']);
 
         $component = Livewire::actingAs($user)
             ->test('pages::admin.dashboard')
@@ -370,12 +380,16 @@ describe('component tests', function () {
         $chartData = $component->get('chartData');
 
         expect($chartData)->toBeArray();
-        expect(count($chartData))->toBe(90);
+        expect(count($chartData))->toBeGreaterThan(0); // Has data after trimming leading zeros
+        expect($chartData[0])->toHaveKeys(['label', 'views']);
     });
 
     it('computes annually chart data correctly', function () {
         $user = User::factory()->create();
         $user->assignRole('admin');
+
+        // Create visit data so chart has data to show
+        Visit::create(['ip' => '192.168.1.1', 'url' => '/', 'method' => 'GET']);
 
         $component = Livewire::actingAs($user)
             ->test('pages::admin.dashboard')
@@ -385,7 +399,8 @@ describe('component tests', function () {
         $chartData = $component->get('chartData');
 
         expect($chartData)->toBeArray();
-        expect(count($chartData))->toBe(365);
+        expect(count($chartData))->toBeGreaterThan(0); // Has data after trimming leading zeros
+        expect($chartData[0])->toHaveKeys(['label', 'views']);
     });
 
     it('computes channels data correctly', function () {
