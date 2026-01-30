@@ -10,18 +10,90 @@ beforeEach(function () {
 });
 
 // ============================================
+// Setup Tests (No Users Exist)
+// ============================================
+
+describe('setup tests', function () {
+    it('shows setup form when no users exist', function () {
+        Livewire::test('pages::admin.login')
+            ->assertSee('Welcome to Stream')
+            ->assertSee('Create your admin account');
+    });
+
+    it('can create first admin user', function () {
+        Livewire::test('pages::admin.login')
+            ->set('name', 'Admin User')
+            ->set('email', 'admin@example.com')
+            ->set('password', 'password123')
+            ->set('passwordConfirmation', 'password123')
+            ->call('register')
+            ->assertRedirect(route('admin.dashboard'));
+
+        $user = User::where('email', 'admin@example.com')->first();
+        expect($user)->not->toBeNull();
+        expect($user->name)->toBe('Admin User');
+        expect($user->hasRole('admin'))->toBeTrue();
+        expect(Auth::check())->toBeTrue();
+    });
+
+    it('validates name is required during setup', function () {
+        Livewire::test('pages::admin.login')
+            ->set('name', '')
+            ->set('email', 'admin@example.com')
+            ->set('password', 'password123')
+            ->set('passwordConfirmation', 'password123')
+            ->call('register')
+            ->assertHasErrors(['name']);
+    });
+
+    it('validates email is required during setup', function () {
+        Livewire::test('pages::admin.login')
+            ->set('name', 'Admin User')
+            ->set('email', '')
+            ->set('password', 'password123')
+            ->set('passwordConfirmation', 'password123')
+            ->call('register')
+            ->assertHasErrors(['email']);
+    });
+
+    it('validates password minimum length during setup', function () {
+        Livewire::test('pages::admin.login')
+            ->set('name', 'Admin User')
+            ->set('email', 'admin@example.com')
+            ->set('password', 'short')
+            ->set('passwordConfirmation', 'short')
+            ->call('register')
+            ->assertHasErrors(['password']);
+    });
+
+    it('validates password confirmation matches during setup', function () {
+        Livewire::test('pages::admin.login')
+            ->set('name', 'Admin User')
+            ->set('email', 'admin@example.com')
+            ->set('password', 'password123')
+            ->set('passwordConfirmation', 'different123')
+            ->call('register')
+            ->assertHasErrors(['passwordConfirmation']);
+    });
+});
+
+// ============================================
 // Component Tests (Livewire::test)
 // ============================================
 
 describe('component tests', function () {
+    beforeEach(function () {
+        User::factory()->create();
+    });
+
     it('renders successfully', function () {
         Livewire::test('pages::admin.login')
             ->assertStatus(200);
     });
 
-    it('has admin login title', function () {
+    it('has admin login title when users exist', function () {
         Livewire::test('pages::admin.login')
-            ->assertSee('Admin Login');
+            ->assertSee('Stream Admin');
     });
 
     it('shows email input', function () {
@@ -112,11 +184,15 @@ describe('component tests', function () {
 // ============================================
 
 describe('browser tests', function () {
+    beforeEach(function () {
+        User::factory()->create();
+    });
+
     it('displays login form correctly', function () {
         $page = visit('/admin/login');
 
-        $page->waitForText('Admin Login')
-            ->assertSee('Admin Login')
+        $page->waitForText('Stream Admin')
+            ->assertSee('Stream Admin')
             ->assertSee('Sign in to access the admin panel')
             ->assertVisible('@email-input')
             ->assertVisible('@password-input')
@@ -202,6 +278,16 @@ describe('browser tests', function () {
     it('takes screenshot of login page', function () {
         visit('/admin/login')
             ->screenshot()
-            ->assertSee('Admin Login');
+            ->assertSee('Stream Admin');
+    });
+});
+
+describe('setup browser tests', function () {
+    it('displays setup form when no users exist', function () {
+        $page = visit('/admin/login');
+
+        $page->waitForText('Welcome to Stream')
+            ->assertSee('Welcome to Stream')
+            ->assertSee('Create your admin account');
     });
 });
