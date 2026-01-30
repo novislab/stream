@@ -4,18 +4,25 @@
 
     <flux:spacer />
 
-    <flux:dropdown position="top" align="start">
-        <flux:profile avatar="/img/demo/user.png" />
+    <flux:dropdown position="bottom" align="end">
+        <flux:profile
+            avatar="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random"
+            name="{{ auth()->user()->name }}"
+        />
 
         <flux:menu>
-            <flux:menu.radio.group>
-                <flux:menu.radio checked>Olivia Martin</flux:menu.radio>
-                <flux:menu.radio>Truly Delta</flux:menu.radio>
-            </flux:menu.radio.group>
+            <flux:menu.item wire:navigate icon="user-circle" href="{{ route('admin.profile') }}">
+                Profile
+            </flux:menu.item>
 
             <flux:menu.separator />
 
-            <flux:menu.item icon="arrow-right-start-on-rectangle">Logout</flux:menu.item>
+            <form method="POST" action="{{ route('admin.logout') }}">
+                @csrf
+                <flux:menu.item type="submit" icon="arrow-right-start-on-rectangle">
+                    Logout
+                </flux:menu.item>
+            </form>
         </flux:menu>
     </flux:dropdown>
 </flux:header>
