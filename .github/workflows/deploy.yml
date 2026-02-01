@@ -27,7 +27,7 @@ jobs:
           cache: 'npm'
 
       - name: Install Composer dependencies
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+        run: composer update --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Install NPM dependencies
         run: npm ci
