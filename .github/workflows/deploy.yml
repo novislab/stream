@@ -42,6 +42,7 @@ jobs:
       - name: Run migrations and export SQL
         run: |
           php artisan migrate:fresh --seed --force
+          php artisan optimize
           mkdir -p sql
           mysqldump -h 127.0.0.1 -u root -ppassword stream > sql/$(date +%Y-%m-%d_%H-%M).sql
         env:
