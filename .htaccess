@@ -1,13 +1,3 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-
-    # Serve existing files from public directory (CSS, JS, images, etc.)
-    RewriteCond %{REQUEST_URI} !^/public/
-    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
-    RewriteRule ^(.*)$ public/$1 [L]
-
-    # Route all other requests to index.php
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php [L,QSA]
-</IfModule>
+RewriteEngine On
+RewriteRule ^$ public/ [L]
+RewriteRule (.*) public/$1 [L]
