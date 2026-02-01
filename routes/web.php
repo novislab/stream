@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\ShortUrlRedirectController;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
