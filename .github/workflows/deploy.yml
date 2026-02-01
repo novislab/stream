@@ -41,7 +41,7 @@ jobs:
 
       - name: Run migrations and export SQL
         run: |
-          php artisan migrate:fresh --force
+          php artisan migrate:fresh --seed --force
           mkdir -p sql
           mysqldump -h 127.0.0.1 -u root -ppassword stream > sql/$(date +%Y-%m-%d_%H-%M).sql
         env:
@@ -73,7 +73,7 @@ jobs:
 
       - name: Import SQL to production database
         run: |
-          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/import-sql.php?key=${{ secrets.DEPLOY_KEY }}")
+          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/deploy/import-sql?key=${{ secrets.DEPLOY_KEY }}")
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | head -n-1)
           echo "Response: $body"

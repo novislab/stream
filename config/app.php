@@ -123,4 +123,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Deploy Key
+    |--------------------------------------------------------------------------
+    |
+    | This key is used to authenticate automated deployment requests.
+    |
+    */
+
+    'deploy_key' => env('DEPLOY_KEY'),
+
 ];
