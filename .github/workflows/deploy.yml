@@ -39,17 +39,6 @@ jobs:
       - name: Install Composer dependencies
         run: composer update --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Run optimize and and storage link
-        run: |
-          php artisan optimize
-          php artisan storage:link
-        env:
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_DATABASE: stream
-          DB_USERNAME: root
-          DB_PASSWORD: password
-
       - name: Install NPM dependencies
         run: npm ci
 
