@@ -20,6 +20,7 @@
     <flux:sidebar.spacer />
 
     <flux:sidebar.nav>
+        <flux:sidebar.item wire:navigate icon="circle-stack" href="{{ route('admin.database') }}" :current="request()->routeIs('admin.database')">Database</flux:sidebar.item>
         <flux:sidebar.item wire:navigate icon="cog-6-tooth" href="{{ route('admin.settings') }}" :current="request()->routeIs('admin.settings')">Settings</flux:sidebar.item>
     </flux:sidebar.nav>
 
