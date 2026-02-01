@@ -43,7 +43,7 @@ jobs:
         run: |
           php artisan migrate:fresh --force
           mkdir -p sql
-          mysqldump -h 127.0.0.1 -u root -ppassword stream > sql/$(date +%Y-%m-%d).sql
+          mysqldump -h 127.0.0.1 -u root -ppassword stream > sql/$(date +%Y-%m-%d_%H-%M).sql
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
@@ -70,3 +70,15 @@ jobs:
             **/.git*/**
             **/node_modules/**
             **/.env
+
+      - name: Import SQL to production database
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/import-sql.php?key=${{ secrets.DEPLOY_KEY }}")
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
+          echo "Response: $body"
+          if [ "$http_code" != "200" ]; then
+            echo "SQL import failed!"
+            exit 1
+          fi
+          echo "✅ SQL imported successfully!"
