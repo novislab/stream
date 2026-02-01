@@ -11,16 +11,6 @@ jobs:
     name: Build & Deploy
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: stream
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,7 +29,7 @@ jobs:
       - name: Install Composer dependencies
         run: composer update --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: optimize Laravel
+      - name: cache routes
         run: php artisan route:cache
 
       - name: Install NPM dependencies
