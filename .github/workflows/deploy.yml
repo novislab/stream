@@ -39,10 +39,14 @@ jobs:
       - name: Install Composer dependencies
         run: composer update --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Run optimize and and storage link
+        run: |
+          php artisan optimize
+          php artisan storage:link
+
       - name: Run migrations and export SQL
         run: |
           php artisan migrate:fresh --force
-          php artisan db:seed --force
           php artisan optimize
           mkdir -p sql
           mysqldump -h 127.0.0.1 -u root -ppassword stream > sql/$(date +%Y-%m-%d).sql
