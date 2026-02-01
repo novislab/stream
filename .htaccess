@@ -11,8 +11,3 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php [L,QSA]
 </IfModule>
-
-# PHP 8.4 Handler
-<FilesMatch \.php$>
-    SetHandler application/x-httpd-ea-php84
-</FilesMatch>
