@@ -43,13 +43,6 @@ jobs:
         run: |
           php artisan optimize
           php artisan storage:link
-
-      - name: Run migrations and export SQL
-        run: |
-          php artisan migrate:fresh --force
-          php artisan optimize
-          mkdir -p sql
-          mysqldump -h 127.0.0.1 -u root -ppassword stream > sql/$(date +%Y-%m-%d).sql
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
