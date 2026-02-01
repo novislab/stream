@@ -5,6 +5,11 @@
 
     RewriteEngine On
 
+    # PHP 8.4 Handler
+    <FilesMatch \.php$>
+        SetHandler application/x-httpd-ea-php84
+    </FilesMatch>
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
