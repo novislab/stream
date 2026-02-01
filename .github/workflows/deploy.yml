@@ -11,6 +11,16 @@ jobs:
     name: Build & Deploy
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: stream
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,6 +38,18 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer update --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Run migrations and export SQL
+        run: |
+          php artisan migrate:fresh --force
+          mkdir -p sql
+          mysqldump -h 127.0.0.1 -u root -ppassword stream > sql/$(date +%Y-%m-%d).sql
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: stream
+          DB_USERNAME: root
+          DB_PASSWORD: password
 
       - name: Install NPM dependencies
         run: npm ci
