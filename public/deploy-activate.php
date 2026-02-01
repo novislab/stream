@@ -4,7 +4,9 @@
  * Zero-downtime deployment activator for cPanel
  * Switches the active release atomically
  */
-$deployKeyFile = dirname(__DIR__, 2).'/deploy_key.txt';
+// App folder is 3 levels up: releases/release_xxx/public -> stream-africa.name.ng
+$appDir = dirname(__DIR__, 3);
+$deployKeyFile = $appDir.'/deploy_key.txt';
 $deployKey = file_exists($deployKeyFile) ? trim(file_get_contents($deployKeyFile)) : '';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -23,11 +25,10 @@ if (! isset($_POST['release']) || empty($_POST['release'])) {
 }
 
 $release = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) $_POST['release']);
-$homeDir = dirname(__DIR__, 2);
-$releasesDir = $homeDir.'/releases';
+$releasesDir = $appDir.'/releases';
 $releasePath = $releasesDir.'/'.$release;
-$sharedDir = $homeDir.'/shared';
-$currentLink = $homeDir.'/current';
+$sharedDir = $appDir.'/shared';
+$currentLink = $appDir.'/current';
 
 if (! is_dir($releasePath)) {
     http_response_code(404);
@@ -73,8 +74,12 @@ try {
     }
 
     // Atomic switch: update ~/current symlink
-    $tempLink = $homeDir.'/current_new';
-    if (file_exists($tempLink)) {
+    // If current is a folder (first deploy), remove it first
+    if (is_dir($currentLink) && ! is_link($currentLink)) {
+        exec('rm -rf '.escapeshellarg($currentLink));
+    }
+    $tempLink = $appDir.'/current_new';
+    if (file_exists($tempLink) || is_link($tempLink)) {
         unlink($tempLink);
     }
     symlink($releasePath, $tempLink);
@@ -99,7 +104,7 @@ try {
 
     // Log deployment
     $log = date('Y-m-d H:i:s')." - Activated: $release\n";
-    file_put_contents($homeDir.'/deployments.log', $log, FILE_APPEND);
+    file_put_contents($appDir.'/deployments.log', $log, FILE_APPEND);
 
     echo "OK: Activated $release";
 
