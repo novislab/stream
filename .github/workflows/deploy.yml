@@ -40,7 +40,6 @@ jobs:
         run: composer update --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
         env:
-          DB_CONNECTION: mysql
           APP_NAME: Stream
           APP_ENV: production
           APP_KEY: base64:001fhTD1xjuvC+SDdAFzf+64uScZosHu/pQ0MYoaCLw=
