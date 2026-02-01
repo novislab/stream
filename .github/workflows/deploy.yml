@@ -51,7 +51,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /releases/${{ env.RELEASE_NAME }}/
+          server-dir: /stream-africa.name.ng/releases/${{ env.RELEASE_NAME }}/
           exclude: |
             **/.git*
             **/.git*/**
