@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Override;
 
 class ShortUrl extends Model
 {
@@ -41,6 +42,7 @@ class ShortUrl extends Model
         ];
     }
 
+    #[Override]
     protected static function booted(): void
     {
         static::creating(function (ShortUrl $shortUrl): void {
