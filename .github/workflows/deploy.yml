@@ -5,20 +5,11 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      rollback:
-        description: 'Release to rollback to (e.g., release_123_1)'
-        required: false
-        type: string
-
-env:
-  RELEASE_NAME: release_${{ github.run_id }}_${{ github.run_number }}
 
 jobs:
   deploy:
     name: Build & Deploy
     runs-on: ubuntu-latest
-    if: ${{ !github.event.inputs.rollback }}
 
     steps:
       - name: Checkout code
@@ -44,59 +35,16 @@ jobs:
       - name: Build assets
         run: npm run build
 
-      - name: Upload release
+      - name: Deploy to cPanel
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /stream-africa.name.ng/releases/${{ env.RELEASE_NAME }}/
+          server-dir: /stream-africa.name.ng/
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             **/.env
-
-      - name: Activate release
-        run: |
-          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/deploy-activate.php" \
-            -d "key=${{ secrets.DEPLOY_KEY }}" \
-            -d "release=${{ env.RELEASE_NAME }}")
-
-          http_code=$(echo "$response" | tail -n1)
-          body=$(echo "$response" | head -n-1)
-
-          echo "Response: $body"
-          echo "HTTP Code: $http_code"
-
-          if [ "$http_code" != "200" ]; then
-            echo "Deployment activation failed!"
-            exit 1
-          fi
-
-          echo "✅ Deployment successful!"
-
-  rollback:
-    name: Rollback
-    runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.rollback }}
-
-    steps:
-      - name: Rollback to previous release
-        run: |
-          response=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.APP_URL }}/deploy-activate.php" \
-            -d "key=${{ secrets.DEPLOY_KEY }}" \
-            -d "release=${{ github.event.inputs.rollback }}")
-
-          http_code=$(echo "$response" | tail -n1)
-          body=$(echo "$response" | head -n-1)
-
-          echo "Response: $body"
-
-          if [ "$http_code" != "200" ]; then
-            echo "Rollback failed!"
-            exit 1
-          fi
-
-          echo "✅ Rollback successful!"
