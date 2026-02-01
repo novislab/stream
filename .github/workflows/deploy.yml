@@ -40,9 +40,7 @@ jobs:
         run: composer update --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
       - name: optimize Laravel
-        run: 
-          php artisan route:cache
-          php artisan view:cache
+        run: php artisan route:cache
 
       - name: Install NPM dependencies
         run: npm ci
