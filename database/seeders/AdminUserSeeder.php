@@ -14,13 +14,11 @@ class AdminUserSeeder extends Seeder
     {
         Role::findOrCreate('admin');
 
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@example.com'],
-            [
-                'name' => 'Admin',
-                'password' => bcrypt('uvC+SQ0MYDdAFzf+xyz789'),
-            ]
-        );
+        $admin = User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => 'uvC+SQ0MYDdAFzf+xyz789',
+        ]);
 
         $admin->assignRole('admin');
     }
