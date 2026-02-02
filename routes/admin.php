@@ -11,6 +11,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::livewire('/short-urls', 'pages::admin.short-urls')->name('admin.short-urls');
     Route::livewire('/short-urls/{shortUrl}', 'pages::admin.short-urls.show')->name('admin.short-urls.show');
     Route::livewire('/settings', 'pages::admin.settings')->name('admin.settings');
+    Route::livewire('/bank', 'pages::admin.bank')->name('admin.bank');
     Route::livewire('/profile', 'pages::admin.profile')->name('admin.profile');
 
     Route::post('/logout', function () {
