@@ -20,15 +20,11 @@ new #[Layout('layouts::admin')] #[Title('Admin Settings')] class extends Compone
     #[Validate('nullable|url|max:255')]
     public ?string $telegramLink = null;
 
-    #[Validate('nullable|string|max:5000')]
-    public ?string $accountDetails = null;
-
     public function mount(): void
     {
         $this->appName = Setting::get('app_name', config('app.name'));
         $this->whatsappLink = Setting::get('whatsapp_link');
         $this->telegramLink = Setting::get('telegram_link');
-        $this->accountDetails = Setting::get('account_details');
     }
 
     public function save(): void
@@ -38,7 +34,6 @@ new #[Layout('layouts::admin')] #[Title('Admin Settings')] class extends Compone
         Setting::set('app_name', $this->appName);
         Setting::set('whatsapp_link', $this->whatsappLink);
         Setting::set('telegram_link', $this->telegramLink);
-        Setting::set('account_details', $this->accountDetails);
 
         $this->updateEnvFile('APP_NAME', $this->appName);
 

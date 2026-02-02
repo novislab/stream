@@ -52,24 +52,6 @@
             </div>
         </flux:card>
 
-        {{-- Account Details --}}
-        <flux:card class="dark:bg-zinc-950">
-            <div class="space-y-6">
-                <flux:heading size="lg">Account Details</flux:heading>
-
-                <flux:field>
-                    <flux:label>Account Information</flux:label>
-                    <flux:description>Enter your payment account details. This will be displayed to users for payments.</flux:description>
-                    <flux:textarea
-                        wire:model="accountDetails"
-                        rows="6"
-                        placeholder="Bank: Example Bank&#10;Account Name: John Doe&#10;Account Number: 1234567890&#10;..."
-                    />
-                    <flux:error name="accountDetails" />
-                </flux:field>
-            </div>
-        </flux:card>
-
         {{-- Save Button --}}
         <div class="flex flex-col sm:flex-row justify-end gap-3">
             <flux:button type="submit" variant="primary" icon="check" class="w-full sm:w-auto">

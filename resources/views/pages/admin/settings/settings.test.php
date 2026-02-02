@@ -35,14 +35,12 @@ describe('component tests', function () {
         Setting::set('app_name', 'Test App');
         Setting::set('whatsapp_link', 'https://wa.me/1234567890');
         Setting::set('telegram_link', 'https://t.me/testuser');
-        Setting::set('account_details', 'Bank: Test Bank');
 
         Livewire::actingAs($user)
             ->test('pages::admin.settings')
             ->assertSet('appName', 'Test App')
             ->assertSet('whatsappLink', 'https://wa.me/1234567890')
-            ->assertSet('telegramLink', 'https://t.me/testuser')
-            ->assertSet('accountDetails', 'Bank: Test Bank');
+            ->assertSet('telegramLink', 'https://t.me/testuser');
     });
 
     it('loads default app name from config when not set', function () {
@@ -63,14 +61,12 @@ describe('component tests', function () {
             ->set('appName', 'My New App')
             ->set('whatsappLink', 'https://wa.me/9876543210')
             ->set('telegramLink', 'https://t.me/newuser')
-            ->set('accountDetails', 'New Bank Details')
             ->call('save')
             ->assertHasNoErrors();
 
         expect(Setting::get('app_name'))->toBe('My New App');
         expect(Setting::get('whatsapp_link'))->toBe('https://wa.me/9876543210');
         expect(Setting::get('telegram_link'))->toBe('https://t.me/newuser');
-        expect(Setting::get('account_details'))->toBe('New Bank Details');
     });
 
     it('validates app name is required', function () {
@@ -132,17 +128,6 @@ describe('component tests', function () {
             ->assertHasNoErrors(['telegramLink']);
     });
 
-    it('allows empty account details', function () {
-        $user = User::factory()->create();
-        $user->assignRole('admin');
-
-        Livewire::actingAs($user)
-            ->test('pages::admin.settings')
-            ->set('appName', 'Test App')
-            ->set('accountDetails')
-            ->call('save')
-            ->assertHasNoErrors(['accountDetails']);
-    });
 });
 
 describe('model tests', function () {
