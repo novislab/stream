@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Setting;
 use Flux\Flux;
+use Illuminate\Support\Facades\Artisan;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
@@ -284,5 +285,25 @@ new #[Layout('layouts::admin')] #[Title('Admin Settings')] class extends Compone
             'sqs' => 'Amazon SQS',
             'beanstalkd' => 'Beanstalkd',
         ];
+    }
+
+    public function optimizeClear(): void
+    {
+        try {
+            Artisan::call('optimize:clear');
+            Flux::toast('Application cache cleared successfully.');
+        } catch (Exception $e) {
+            Flux::toast('Error clearing cache: '.$e->getMessage(), 'error');
+        }
+    }
+
+    public function optimizeView(): void
+    {
+        try {
+            Artisan::call('view:cache');
+            Flux::toast('Views compiled successfully.');
+        } catch (Exception $e) {
+            Flux::toast('Error compiling views: '.$e->getMessage(), 'error');
+        }
     }
 };

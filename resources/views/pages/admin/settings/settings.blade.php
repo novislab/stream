@@ -259,32 +259,19 @@
             </div>
         </flux:card>
 
-        {{-- Database Information (Read-Only) --}}
-        <flux:card class="dark:bg-zinc-950 opacity-75">
+        {{-- Optimize Actions --}}
+        <flux:card class="dark:bg-zinc-950">
             <div class="space-y-6">
-                <flux:heading size="lg">Database Information</flux:heading>
-                <flux:description class="text-sm text-gray-500">Database settings are read-only for security purposes.</flux:description>
+                <flux:heading size="lg">Application Optimization</flux:heading>
+                <flux:description class="text-sm text-gray-500">Clear caches and optimize the application for better performance.</flux:description>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <flux:field>
-                        <flux:label>Default Connection</flux:label>
-                        <flux:description class="text-white">{{ config('database.default') }}</flux:description>
-                    </flux:field>
-
-                    <flux:field>
-                        <flux:label>Database Host</flux:label>
-                        <flux:description class="text-white">{{ config('database.connections.' . config('database.default') . '.host') }}</flux:description>
-                    </flux:field>
-
-                    <flux:field>
-                        <flux:label>Database Name</flux:label>
-                        <flux:description class="text-white">{{ config('database.connections.' . config('database.default') . '.database') }}</flux:description>
-                    </flux:field>
-
-                    <flux:field>
-                        <flux:label>Database Port</flux:label>
-                        <flux:description class="text-white">{{ config('database.connections.' . config('database.default') . '.port') }}</flux:description>
-                    </flux:field>
+                <div class="grid grid-cols-2 sm:grid-cols-2 gap-4">
+                    <flux:button wire:click="optimizeClear" icon="trash" variant="filled" class="w-full">
+                        Clear All
+                    </flux:button>
+                    <flux:button wire:click="optimizeView" icon="document" variant="filled" class="w-full">
+                        Views
+                    </flux:button>
                 </div>
             </div>
         </flux:card>
