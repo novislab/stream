@@ -32,6 +32,20 @@
                         id="fullName"
                         wire:model="fullName"
                         placeholder="Enter your full name"
+                        autocomplete="off"
+                        class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                    >
+                </div>
+
+                {{-- Username --}}
+                <div>
+                    <label for="username" class="mb-1.5 block text-sm font-medium text-gray-300">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        wire:model="username"
+                        placeholder="Choose a username"
+                        autocomplete="off"
                         class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
                     >
                 </div>
@@ -44,6 +58,7 @@
                         id="email"
                         wire:model="email"
                         placeholder="Enter your email"
+                        autocomplete="off"
                         class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
                     >
                 </div>
@@ -56,26 +71,25 @@
                         id="phone"
                         wire:model="phone"
                         placeholder="Enter your phone number"
+                        autocomplete="off"
                         class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
                     >
                 </div>
-
-
 
                 {{-- Activation Code --}}
                 <div>
                     <div class="mb-1.5 flex items-center justify-between">
                         <label for="activationCode" class="text-sm font-medium text-gray-300">Activation Code</label>
-                        <a href="{{ route('payment') }}" wire:navigate class="text-xs text-teal-400 hover:text-teal-300 hover:underline">Don't have a code? Get one here</a>
+                        <a href="{{ route('payment') }}" wire:navigate class="text-xs text-teal-400 hover:text-teal-300 hover:underline">Get code</a>
                     </div>
                     <input
                         type="text"
                         id="activationCode"
                         wire:model="activationCode"
                         placeholder="Enter your activation code"
+                        autocomplete="off"
                         class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
                     >
-                    <p class="mt-1.5 text-xs text-gray-500">Activation code is required to complete registration</p>
                 </div>
 
                 {{-- Password --}}
@@ -86,13 +100,10 @@
                         id="password"
                         wire:model="password"
                         placeholder="Create a password"
+                        autocomplete="off"
                         class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
                     >
                 </div>
-
-
-
-
 
                 {{-- Submit Button --}}
                 <button
@@ -103,18 +114,7 @@
                 </button>
             </form>
 
-            {{-- Divider --}}
-            <div class="my-6 flex items-center gap-4">
-                <div class="h-px flex-1 bg-teal-800/50"></div>
-                <span class="text-sm text-gray-500">or</span>
-                <div class="h-px flex-1 bg-teal-800/50"></div>
-            </div>
 
-            {{-- Login Link --}}
-            <p class="text-center text-sm text-gray-400">
-                Already have an account?
-                <a href="#" class="font-medium text-teal-400 hover:underline">Sign In</a>
-            </p>
         </div>
 
         {{-- Bottom Text --}}
