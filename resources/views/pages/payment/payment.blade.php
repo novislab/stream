@@ -1,26 +1,26 @@
 <div
-    class="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0a1f1f] via-[#0d2e2e] to-[#0a2525] px-4 py-8">
+    class="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0a1a1a] via-[#0d2525] to-[#0a1a1a] px-4 py-8">
     {{-- Background effects --}}
     <div class="pointer-events-none absolute inset-0 overflow-hidden">
-        <div class="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-teal-500/10 blur-3xl"></div>
-        <div class="absolute bottom-0 -left-20 h-60 w-60 rounded-full bg-emerald-500/10 blur-3xl"></div>
+        <div class="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-[#315150]/20 blur-3xl"></div>
+        <div class="absolute bottom-0 -left-20 h-60 w-60 rounded-full bg-[#2a4040]/20 blur-3xl"></div>
     </div>
 
     <div class="relative w-full max-w-md">
 
 
         {{-- Payment Card --}}
-        <div class="rounded-2xl border border-teal-800/50 bg-[#0a1f1f]/80 p-6 shadow-2xl backdrop-blur-sm md:p-8">
+        <div class="rounded-2xl border border-[#315150]/50 bg-[#0a1a1a]/80 p-6 shadow-2xl backdrop-blur-sm md:p-8">
             <div class="mb-6 text-center">
                 <h1 class="mb-2 text-2xl font-bold text-white">Get Activation Code</h1>
                 <p class="text-sm text-gray-400">Complete payment to receive your activation code</p>
             </div>
 
             {{-- Price Card --}}
-            <div class="mb-6 rounded-xl border border-teal-500/30 bg-teal-500/10 p-4 text-center">
+            <div class="mb-6 rounded-xl border border-[#315150]/30 bg-[#315150]/10 p-4 text-center">
                 <p class="mb-1 text-sm text-gray-400">Onboarding Fee</p>
                 <p class="text-4xl font-bold text-white">₦12,000</p>
-                <p class="mt-2 text-xs text-teal-400">One-time payment • Lifetime access</p>
+                <p class="mt-2 text-xs text-[#3d6363]">One-time payment • Lifetime access</p>
             </div>
 
             {{-- Countdown Timer --}}
@@ -42,14 +42,16 @@
                 <div class="space-y-4">
                     <h3 class="mb-3 text-sm font-semibold text-gray-300">Select Bank for Transfer:</h3>
                     @foreach($banks as $index => $bank)
-                        <div class="rounded-xl border border-teal-500/30 bg-teal-500/10 p-4 {{ $index === 0 ? 'ring-2 ring-teal-500/50' : '' }}">
+                        <div class="rounded-xl border border-[#315150]/30 bg-[#315150]/10 p-4 {{ $index === 0 ? 'ring-2 ring-[#315150]/50' : '' }}">
                             <div class="flex items-start justify-between mb-3">
                                 <div class="flex items-center gap-2">
-                                    <flux:icon name="building" class="w-5 h-5 text-teal-400" />
+                                    <svg class="w-5 h-5 text-[#3d6363]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
                                     <h4 class="text-white font-semibold">{{ $bank->bank_name }}</h4>
                                 </div>
                                 @if($index === 0)
-                                    <span class="bg-teal-500/20 text-teal-400 text-xs px-2 py-1 rounded-full">Recommended</span>
+                                    <span class="bg-[#315150]/20 text-[#3d6363] text-xs px-2 py-1 rounded-full">Recommended</span>
                                 @endif
                             </div>
                             
@@ -63,15 +65,15 @@
                                     <span class="text-gray-400">Account Number:</span>
                                     <div class="flex items-center gap-2">
                                         <span class="text-white font-mono text-sm">{{ $bank->account_number }}</span>
-                                        <button 
+                                        <button
                                             onclick="copyToClipboard('{{ $bank->account_number }}', this)"
-                                            class="p-1 rounded hover:bg-teal-600/20 transition-colors"
+                                            class="p-1 rounded hover:bg-[#315150]/20 transition-colors"
                                             title="Copy account number"
                                         >
-                                            <svg class="w-4 h-4 text-teal-400 copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-4 h-4 text-[#3d6363] copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                                             </svg>
-                                            <span class="text-xs text-teal-400 hidden copied-text">Copied!</span>
+                                            <span class="text-xs text-[#3d6363] hidden copied-text">Copied!</span>
                                         </button>
                                     </div>
                                 </div>
@@ -87,7 +89,9 @@
             @else
                 <div class="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
                     <div class="text-center">
-                        <flux:icon name="alert-circle" class="w-12 h-12 mx-auto mb-3 text-red-400" />
+                        <svg class="w-12 h-12 mx-auto mb-3 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
                         <h3 class="mb-2 text-sm font-semibold text-red-400">No Active Banks Available</h3>
                         <p class="text-xs text-gray-400">Please contact support or check back later for payment options.</p>
                     </div>
@@ -95,7 +99,7 @@
             @endif
 
             {{-- Payment Button --}}
-            <button type="submit" class="w-full mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-teal-500 to-emerald-500 px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105" wire:click="makePayment">
+            <button type="submit" class="w-full mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-[#315150] to-[#3d6363] px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-[#315150]/25 transition-all hover:scale-105" wire:click="makePayment">
                 I have make payment
             </button>
 

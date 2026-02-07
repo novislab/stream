@@ -1,15 +1,15 @@
-<div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0a1f1f] via-[#0d2e2e] to-[#0a2525] px-4 py-8">
+<div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#0a1a1a] via-[#0d2525] to-[#0a1a1a] px-4 py-8">
     {{-- Background effects --}}
     <div class="pointer-events-none absolute inset-0 overflow-hidden">
-        <div class="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-teal-500/10 blur-3xl"></div>
-        <div class="absolute bottom-0 -left-20 h-60 w-60 rounded-full bg-emerald-500/10 blur-3xl"></div>
+        <div class="absolute -top-20 -right-20 h-60 w-60 rounded-full bg-[#315150]/20 blur-3xl"></div>
+        <div class="absolute bottom-0 -left-20 h-60 w-60 rounded-full bg-[#2a4040]/20 blur-3xl"></div>
     </div>
 
     <div class="relative w-full max-w-md">
         {{-- Logo --}}
         <div class="mb-6 flex justify-center">
             <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2">
-                <svg class="h-8 w-8 text-teal-400" viewBox="0 0 24 24" fill="currentColor">
+                <svg class="h-8 w-8 text-[#3d6363]" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M3 7h18v2H3V7zm0 4h18v2H3v-2zm0 4h12v2H3v-2z"/>
                 </svg>
                 <span class="text-2xl font-bold text-white">Stream</span>
@@ -17,7 +17,7 @@
         </div>
 
         {{-- Form Card --}}
-        <div class="rounded-2xl border border-teal-800/50 bg-[#0a1f1f]/80 p-6 shadow-2xl backdrop-blur-sm md:p-8">
+        <div class="rounded-2xl border border-[#315150]/50 bg-[#0a1a1a]/80 p-6 shadow-2xl backdrop-blur-sm md:p-8">
             <div class="mb-6 text-center">
                 <h1 class="mb-2 text-2xl font-bold text-white">Create Account</h1>
                 <p class="text-sm text-gray-400">Join Stream and start earning today</p>
@@ -33,7 +33,7 @@
                         wire:model="fullName"
                         placeholder="Enter your full name"
                         autocomplete="off"
-                        class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                        class="w-full rounded-lg border border-[#315150]/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-[#315150] focus:outline-none focus:ring-1 focus:ring-[#315150]"
                     >
                 </div>
 
@@ -46,7 +46,7 @@
                         wire:model="username"
                         placeholder="Choose a username"
                         autocomplete="off"
-                        class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                        class="w-full rounded-lg border border-[#315150]/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-[#315150] focus:outline-none focus:ring-1 focus:ring-[#315150]"
                     >
                 </div>
 
@@ -59,7 +59,7 @@
                         wire:model="email"
                         placeholder="Enter your email"
                         autocomplete="off"
-                        class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                        class="w-full rounded-lg border border-[#315150]/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-[#315150] focus:outline-none focus:ring-1 focus:ring-[#315150]"
                     >
                 </div>
 
@@ -72,7 +72,7 @@
                         wire:model="phone"
                         placeholder="Enter your phone number"
                         autocomplete="off"
-                        class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                        class="w-full rounded-lg border border-[#315150]/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-[#315150] focus:outline-none focus:ring-1 focus:ring-[#315150]"
                     >
                 </div>
 
@@ -80,7 +80,7 @@
                 <div>
                     <div class="mb-1.5 flex items-center justify-between">
                         <label for="activationCode" class="text-sm font-medium text-gray-300">Activation Code</label>
-                        <a href="{{ route('payment') }}" wire:navigate class="text-xs text-teal-400 hover:text-teal-300 hover:underline">Get code</a>
+                        <a href="{{ route('payment') }}" wire:navigate class="text-xs text-[#3d6363] hover:text-[#315150] hover:underline">Get code</a>
                     </div>
                     <input
                         type="text"
@@ -88,7 +88,7 @@
                         wire:model="activationCode"
                         placeholder="Enter your activation code"
                         autocomplete="off"
-                        class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                        class="w-full rounded-lg border border-[#315150]/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-[#315150] focus:outline-none focus:ring-1 focus:ring-[#315150]"
                     >
                 </div>
 
@@ -101,14 +101,14 @@
                         wire:model="password"
                         placeholder="Create a password"
                         autocomplete="off"
-                        class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                        class="w-full rounded-lg border border-[#315150]/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-[#315150] focus:outline-none focus:ring-1 focus:ring-[#315150]"
                     >
                 </div>
 
                 {{-- Submit Button --}}
                 <button
                     type="submit"
-                    class="w-full rounded-lg bg-linear-to-r from-teal-500 to-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-teal-500/30 active:scale-[0.98]"
+                    class="w-full rounded-lg bg-linear-to-r from-[#315150] to-[#3d6363] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-[#315150]/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-[#315150]/30 active:scale-[0.98]"
                 >
                     Sign Up Now
                 </button>
@@ -130,7 +130,7 @@
             <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" wire:click="closeModal"></div>
 
             {{-- Modal --}}
-            <div class="relative w-full max-w-sm rounded-2xl border border-red-500/30 bg-[#0a1f1f] p-6 shadow-2xl">
+            <div class="relative w-full max-w-sm rounded-2xl border border-red-500/30 bg-[#0a1a1a] p-6 shadow-2xl">
                 {{-- Close button --}}
                 <button wire:click="closeModal" class="absolute right-4 top-4 text-gray-400 hover:text-white">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,7 +153,7 @@
                     </p>
 
                     {{-- Button --}}
-                    <a href="{{ route('payment') }}" wire:navigate class="block w-full rounded-lg bg-linear-to-r from-teal-500 to-emerald-500 px-4 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-[1.02]">
+                    <a href="{{ route('payment') }}" wire:navigate class="block w-full rounded-lg bg-linear-to-r from-[#315150] to-[#3d6363] px-4 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-[#315150]/25 transition-all hover:scale-[1.02]">
                         Get Activation Code
                     </a>
                 </div>
