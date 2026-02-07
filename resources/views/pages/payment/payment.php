@@ -1,27 +1,20 @@
 <?php
 
-use App\Models\Setting;
+use App\Models\Bank;
+use Flux\Flux;
 use Livewire\Component;
 
 new class extends Component
 {
-    public bool $showProcessingModal = false;
-
-    public ?string $bank = null;
-
-    public ?string $bankAccountName = null;
-
-    public ?string $bankAccountNumber = null;
+    public $banks;
 
     public function mount(): void
     {
-        $this->bank = Setting::get('bank');
-        $this->bankAccountName = Setting::get('bank_account_name');
-        $this->bankAccountNumber = Setting::get('bank_account_number');
+        $this->banks = Bank::where('is_active', true)->get();
     }
 
-    public function processPayment(): void
+    public function makePayment(): void
     {
-        $this->showProcessingModal = true;
+        Flux::toast('Payment processing initiated. Please complete the bank transfer.');
     }
 };

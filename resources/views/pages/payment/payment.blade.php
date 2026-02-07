@@ -7,15 +7,7 @@
     </div>
 
     <div class="relative w-full max-w-md">
-        {{-- Logo --}}
-        <div class="mb-6 flex justify-center">
-            <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2">
-                <svg class="h-8 w-8 text-teal-400" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 7h18v2H3V7zm0 4h18v2H3v-2zm0 4h12v2H3v-2z" />
-                </svg>
-                <span class="text-2xl font-bold text-white">Stream</span>
-            </a>
-        </div>
+
 
         {{-- Payment Card --}}
         <div class="rounded-2xl border border-teal-800/50 bg-[#0a1f1f]/80 p-6 shadow-2xl backdrop-blur-sm md:p-8">
@@ -31,125 +23,80 @@
                 <p class="mt-2 text-xs text-teal-400">One-time payment • Lifetime access</p>
             </div>
 
-            {{-- What you get --}}
-            <div class="mb-6">
-                <h3 class="mb-3 text-sm font-semibold text-gray-300">What you'll get:</h3>
-                <ul class="space-y-2">
-                    <li class="flex items-center gap-2 text-sm text-gray-400">
-                        <svg class="h-4 w-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        Instant Activation Code
-                    </li>
-                    <li class="flex items-center gap-2 text-sm text-gray-400">
-                        <svg class="h-4 w-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        100% Cashback (₦12,000)
-                    </li>
-                    <li class="flex items-center gap-2 text-sm text-gray-400">
-                        <svg class="h-4 w-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        Access to all collaboration types
-                    </li>
-                    <li class="flex items-center gap-2 text-sm text-gray-400">
-                        <svg class="h-4 w-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        Stream SkillUp courses
-                    </li>
-                    <li class="flex items-center gap-2 text-sm text-gray-400">
-                        <svg class="h-4 w-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        Stream Partner Bonus (₦10,200)
-                    </li>
-                </ul>
-            </div>
-
-            {{-- Bank Details --}}
-            <div class="mb-6"
-                x-data='{ copied: false, message: "", accountNumber: @json($bankAccountNumber ?? ''), copy() { console.log("payment.copy() called", this.accountNumber); if (!this.accountNumber) { this.message = "No account number"; setTimeout(()=> this.message = "", 2000); return; } const doCopied = () => { this.copied = true; this.message = "Copied"; setTimeout(()=> { this.copied = false; this.message = "" }, 2000); }; if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(this.accountNumber).then(doCopied).catch(()=>{ // fallback to textarea
-                                try {
-                                    const ta = document.createElement("textarea");
-                                    ta.value = this.accountNumber;
-                                    ta.setAttribute("readonly", "");
-                                    ta.style.position = "absolute";
-                                    ta.style.left = "-9999px";
-                                    document.body.appendChild(ta);
-                                    ta.select();
-                                    const ok = document.execCommand("copy");
-                                    document.body.removeChild(ta);
-                                    if (ok) doCopied(); else { this.message = "Copy failed"; setTimeout(()=> this.message = "", 2000); }
-                                } catch (e) { console.error(e); this.message = "Copy failed"; setTimeout(()=> this.message = "", 2000); }
-                            }); } else { // older browsers
-                                try {
-                                    const ta = document.createElement("textarea");
-                                    ta.value = this.accountNumber;
-                                    ta.setAttribute("readonly", "");
-                                    ta.style.position = "absolute";
-                                    ta.style.left = "-9999px";
-                                    document.body.appendChild(ta);
-                                    ta.select();
-                                    const ok = document.execCommand("copy");
-                                    document.body.removeChild(ta);
-                                    if (ok) doCopied(); else { this.message = "Copy failed"; setTimeout(()=> this.message = "", 2000); }
-                                } catch (e) { console.error(e); this.message = "Copy failed"; setTimeout(()=> this.message = "", 2000); }
-                            } } }'>
-                <h3 class="mb-3 text-sm font-semibold text-gray-300">Payment:</h3>
-
-                <div class="mt-4 rounded-lg border border-teal-800/40 bg-[#061818] p-4">
-                    <h4 class="mb-2 text-sm font-semibold text-gray-300">Bank Details</h4>
-
-                    <div class="space-y-2">
-                        <div class="text-sm text-gray-400">Bank: <span
-                                class="font-medium text-white">{{ $bank ?? 'N/A' }}</span></div>
-                        <div class="text-sm text-gray-400">Account Name: <span
-                                class="font-medium text-white">{{ $bankAccountName ?? 'N/A' }}</span></div>
-                        <div class="mt-2 flex items-center gap-3">
-                            <div class="text-sm text-gray-300">Account Number:</div>
-
-                            <div class="ml-2 flex items-center gap-2">
-                                <span id="account-number-text" role="button" tabindex="0"
-                                    class="font-mono text-white cursor-pointer select-all" title="Click to copy"
-                                    onclick="streamCopyAccount(@json($bankAccountNumber ?? ''))"
-                                    onkeydown="if(event.key==='Enter' || event.key===' ') { event.preventDefault(); streamCopyAccount(@json($bankAccountNumber ?? '')); }">
-                                    {{ $bankAccountNumber ?? 'N/A' }}
-                                </span>
-
-                                <svg id="copy-icon" class="h-4 w-4 text-teal-400" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 3h5v5" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 8L13 16" />
-                                </svg>
-
-                                <svg id="copied-icon" class="hidden h-4 w-4 text-green-400" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
-
-                                <span id="copy-message" class="ml-2 text-xs text-teal-300 hidden"></span>
-                            </div>
-                        </div>
+            {{-- Countdown Timer --}}
+            <div class="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+                <div class="text-center">
+                    <h3 class="mb-2 text-sm font-semibold text-red-400">⏰ Limited Time Offer</h3>
+                    <p class="mb-3 text-xs text-gray-400">Complete payment before time runs out!</p>
+                    <div class="flex justify-center gap-2 text-2xl font-mono font-bold text-white">
+                        <span id="countdown-minutes" class="bg-red-500/20 px-3 py-1 rounded">15</span>
+                        <span class="text-red-400">:</span>
+                        <span id="countdown-seconds" class="bg-red-500/20 px-3 py-1 rounded">00</span>
                     </div>
-
-                    @unless ($bank || $bankAccountNumber || $bankAccountName)
-                        <div class="mt-3 text-sm text-gray-500">Bank details are not configured. Please contact the
-                            administrator.</div>
-                    @endunless
+                    <p class="mt-2 text-xs text-gray-400">Minutes remaining</p>
                 </div>
             </div>
 
-            {{-- Pay Button --}}
-            <button type="button" wire:click="processPayment"
-                class="w-full rounded-lg bg-linear-to-r from-teal-500 to-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-[1.02] hover:shadow-xl hover:shadow-teal-500/30 active:scale-[0.98]">
-                Pay ₦12,000
+            {{-- Bank Transfer Information --}}
+            @if($banks->count() > 0)
+                <div class="space-y-4">
+                    <h3 class="mb-3 text-sm font-semibold text-gray-300">Select Bank for Transfer:</h3>
+                    @foreach($banks as $index => $bank)
+                        <div class="rounded-xl border border-teal-500/30 bg-teal-500/10 p-4 {{ $index === 0 ? 'ring-2 ring-teal-500/50' : '' }}">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <flux:icon name="building" class="w-5 h-5 text-teal-400" />
+                                    <h4 class="text-white font-semibold">{{ $bank->bank_name }}</h4>
+                                </div>
+                                @if($index === 0)
+                                    <span class="bg-teal-500/20 text-teal-400 text-xs px-2 py-1 rounded-full">Recommended</span>
+                                @endif
+                            </div>
+                            
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-400">Account Name:</span>
+                                    <span class="text-white font-medium">{{ $bank->account_name }}</span>
+                                </div>
+                                
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-400">Account Number:</span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-white font-mono text-sm">{{ $bank->account_number }}</span>
+                                        <button 
+                                            onclick="copyToClipboard('{{ $bank->account_number }}', this)"
+                                            class="p-1 rounded hover:bg-teal-600/20 transition-colors"
+                                            title="Copy account number"
+                                        >
+                                            <svg class="w-4 h-4 text-teal-400 copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                            </svg>
+                                            <span class="text-xs text-teal-400 hidden copied-text">Copied!</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-400">Amount:</span>
+                                    <span class="text-white font-medium">₦12,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+                    <div class="text-center">
+                        <flux:icon name="alert-circle" class="w-12 h-12 mx-auto mb-3 text-red-400" />
+                        <h3 class="mb-2 text-sm font-semibold text-red-400">No Active Banks Available</h3>
+                        <p class="text-xs text-gray-400">Please contact support or check back later for payment options.</p>
+                    </div>
+                </div>
+            @endif
+
+            {{-- Payment Button --}}
+            <button type="submit" class="w-full mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-teal-500 to-emerald-500 px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105" wire:click="makePayment">
+                I have make payment
             </button>
 
             {{-- Security Note --}}
@@ -162,107 +109,55 @@
             </div>
         </div>
 
-        {{-- Back to Register --}}
-        <p class="mt-6 text-center text-sm text-gray-400">
-            Already have an activation code?
-        </p>
+        {{-- Countdown Timer Script --}}
+        <script>
+            let timeLeft = 15 * 60; // 15 minutes in seconds
+            
+            function updateCountdown() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
+                
+                if (timeLeft > 0) {
+                    timeLeft--;
+                } else {
+                    // Timer expired - redirect or show message
+                    window.location.reload();
+                }
+            }
+            
+            function copyToClipboard(text, button) {
+                navigator.clipboard.writeText(text).then(function() {
+                    const icon = button.querySelector('.copy-icon');
+                    const copiedText = button.querySelector('.copied-text');
+                    
+                    // Hide icon and show "Copied!" text
+                    icon.classList.add('hidden');
+                    copiedText.classList.remove('hidden');
+                    
+                    // Reset after 2 seconds
+                    setTimeout(function() {
+                        icon.classList.remove('hidden');
+                        copiedText.classList.add('hidden');
+                    }, 2000);
+                });
+            }
+            
+            // Update immediately and then every second
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        </script>
+
+
 
         {{-- Bottom Text --}}
 
-        <script>
-            function streamCopyAccount(text) {
-                try {
-                    console.log('streamCopyAccount', text);
-                } catch (e) {}
-                if (!text) {
-                    show('No account number');
-                    return;
-                }
-
-                function doOk() {
-                    const icon = document.getElementById('copy-icon');
-                    const okIcon = document.getElementById('copied-icon');
-                    const msg = document.getElementById('copy-message');
-                    if (icon) icon.classList.add('hidden');
-                    if (okIcon) okIcon.classList.remove('hidden');
-                    if (msg) {
-                        msg.textContent = 'Copied';
-                        msg.classList.remove('hidden');
-                    }
-                    setTimeout(() => {
-                        if (icon) icon.classList.remove('hidden');
-                        if (okIcon) okIcon.classList.add('hidden');
-                        if (msg) msg.classList.add('hidden');
-                    }, 2000);
-                }
-
-                function fallback() {
-                    try {
-                        const ta = document.createElement('textarea');
-                        ta.value = text;
-                        ta.setAttribute('readonly', '');
-                        ta.style.position = 'absolute';
-                        ta.style.left = '-9999px';
-                        document.body.appendChild(ta);
-                        ta.select();
-                        const ok = document.execCommand('copy');
-                        document.body.removeChild(ta);
-                        if (ok) doOk();
-                        else show('Copy failed');
-                    } catch (e) {
-                        console.error(e);
-                        show('Copy failed');
-                    }
-                }
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(text).then(doOk).catch(fallback);
-                } else {
-                    fallback();
-                }
-
-                function show(m) {
-                    const el = document.getElementById('copy-message');
-                    if (el) {
-                        el.textContent = m;
-                        el.classList.remove('hidden');
-                        setTimeout(() => el.classList.add('hidden'), 2000);
-                    }
-                }
-            }
-        </script>
+        
 
         <p class="mt-4 text-center text-xs text-gray-500">
             &copy; {{ date('Y') }} Stream Africa. All rights reserved.
         </p>
     </div>
-
-    {{-- Payment Processing Modal --}}
-    @if ($showProcessingModal)
-        <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {{-- Backdrop --}}
-            <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
-
-            {{-- Modal --}}
-            <div class="relative w-full max-w-sm rounded-2xl border border-teal-500/30 bg-[#0a1f1f] p-6 shadow-2xl">
-                {{-- Loading Spinner --}}
-                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center">
-                    <svg class="h-12 w-12 animate-spin text-teal-500" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                            stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
-                    </svg>
-                </div>
-
-                {{-- Content --}}
-                <div class="text-center">
-                    <h3 class="mb-2 text-xl font-bold text-white">Processing Payment</h3>
-                    <p class="text-sm text-gray-400">
-                        Please wait while we process your payment. Do not close this window.
-                    </p>
-                </div>
-            </div>
-        </div>
-    @endif
 </div>

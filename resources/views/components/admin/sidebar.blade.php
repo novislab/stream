@@ -18,16 +18,17 @@
                 :current="request()->routeIs('admin.visitors')">Visitors</flux:sidebar.item>
             <flux:sidebar.item wire:navigate icon="link" href="{{ route('admin.short-urls') }}"
                 :current="request()->routeIs('admin.short-urls*')">Short URLs</flux:sidebar.item>
-        </flux:sidebar.nav>
-
-        <flux:sidebar.spacer />
-
-        <flux:sidebar.nav>
             <flux:sidebar.item wire:navigate icon="banknotes" href="{{ route('admin.bank') }}"
                 :current="request()->routeIs('admin.bank*')">Bank</flux:sidebar.item>
+            <flux:sidebar.item wire:navigate icon="share" href="{{ route('admin.social-links') }}"
+                :current="request()->routeIs('admin.social-links')">Social Links</flux:sidebar.item>
+            <flux:sidebar.item wire:navigate icon="user-circle" href="{{ route('admin.profile') }}"
+                :current="request()->routeIs('admin.profile')">Profile</flux:sidebar.item>
             <flux:sidebar.item wire:navigate icon="cog-6-tooth" href="{{ route('admin.settings') }}"
                 :current="request()->routeIs('admin.settings')">Settings</flux:sidebar.item>
         </flux:sidebar.nav>
+
+        <flux:sidebar.spacer />
 
         <flux:dropdown position="top" align="start" class="max-lg:hidden">
             <flux:sidebar.profile

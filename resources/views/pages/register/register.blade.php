@@ -60,17 +60,7 @@
                     >
                 </div>
 
-                {{-- Referral Code --}}
-                <div>
-                    <label for="referralCode" class="mb-1.5 block text-sm font-medium text-gray-300">Referral Code <span class="text-gray-500">(Optional)</span></label>
-                    <input
-                        type="text"
-                        id="referralCode"
-                        wire:model="referralCode"
-                        placeholder="Enter referral code"
-                        class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
-                    >
-                </div>
+
 
                 {{-- Activation Code --}}
                 <div>
@@ -100,30 +90,9 @@
                     >
                 </div>
 
-                {{-- Confirm Password --}}
-                <div>
-                    <label for="passwordConfirmation" class="mb-1.5 block text-sm font-medium text-gray-300">Confirm Password</label>
-                    <input
-                        type="password"
-                        id="passwordConfirmation"
-                        wire:model="passwordConfirmation"
-                        placeholder="Confirm your password"
-                        class="w-full rounded-lg border border-teal-800/50 bg-[#081818] px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
-                    >
-                </div>
 
-                {{-- Terms --}}
-                <div class="flex items-start gap-3">
-                    <input
-                        type="checkbox"
-                        id="agreeTerms"
-                        wire:model="agreeTerms"
-                        class="mt-1 h-4 w-4 rounded border-teal-800 bg-[#081818] text-teal-500 focus:ring-teal-500"
-                    >
-                    <label for="agreeTerms" class="text-sm text-gray-400">
-                        I agree to the <a href="#" class="text-teal-400 hover:underline">Terms of Service</a> and <a href="#" class="text-teal-400 hover:underline">Privacy Policy</a>
-                    </label>
-                </div>
+
+
 
                 {{-- Submit Button --}}
                 <button
