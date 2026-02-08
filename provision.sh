@@ -23,8 +23,8 @@ systemctl enable mysql
 
 # Install Redis
 apt-get install -y -qq redis-server > /dev/null
-systemctl start redis
-systemctl enable redis
+systemctl start redis || true
+systemctl enable redis || true
 
 # Install Nginx
 apt-get install -y -qq nginx > /dev/null
