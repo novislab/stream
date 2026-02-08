@@ -76,6 +76,16 @@ GRANT ALL PRIVILEGES ON laravel.* TO 'laravel'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
+# Setup SSH for GitHub (pass key via GITHUB_SSH_KEY env var)
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+
+if [ -n "$GITHUB_SSH_KEY" ]; then
+    echo "$GITHUB_SSH_KEY" > ~/.ssh/id_rsa
+    chmod 600 ~/.ssh/id_rsa
+    ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+fi
+
 # Clone private repository
 git clone git@github.com:novislap/stream.git /var/www/laravel
 cd /var/www/laravel
