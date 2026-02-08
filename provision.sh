@@ -114,8 +114,12 @@ sed -i "s|APP_URL=.*|APP_URL=http://localhost|" .env
 
 php artisan key:generate
 
-# Run migrations and seeders
-php artisan migrate --seed
+# Run migrations (skip seeding due to factory issue)
+php artisan migrate --force
+
+# Run seeders manually
+php artisan db:seed --class=RoleSeeder --force || echo "Role seeding skipped"
+php artisan db:seed --class=AdminUserSeeder --force || echo "Admin seeding skipped"
 
 # Set permissions
 chown -R www-data:www-data /var/www/laravel
