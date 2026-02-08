@@ -10,12 +10,7 @@
         {{-- Header --}}
         <header class="relative z-10 flex items-center justify-between px-4 py-4 md:px-12 md:py-6">
             <div class="flex items-center gap-2">
-                <div class="flex h-8 w-8 items-center justify-center md:h-10 md:w-10">
-                    <svg class="h-6 w-6 text-[#3d6363] md:h-8 md:w-8" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 7h18v2H3V7zm0 4h18v2H3v-2zm0 4h12v2H3v-2z"/>
-                    </svg>
-                </div>
-                <span class="text-xl font-bold text-white md:text-2xl">Stream</span>
+                <img src="/images/logo.png" alt="Stream" class="h-8 w-auto md:h-10">
             </div>
             <div class="flex items-center gap-2 md:gap-4">
                 <span class="hidden text-sm text-gray-400 lg:block">@officialstreamafrica</span>
@@ -359,10 +354,7 @@
                 {{-- Brand --}}
                 <div>
                     <div class="mb-3 flex items-center gap-2 md:mb-4">
-                        <svg class="h-6 w-6 text-[#3d6363] md:h-8 md:w-8" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3 7h18v2H3V7zm0 4h18v2H3v-2zm0 4h12v2H3v-2z"/>
-                        </svg>
-                        <span class="text-xl font-bold text-white md:text-2xl">Stream</span>
+                        <img src="/images/logo.png" alt="Stream" class="h-6 w-auto md:h-8">
                     </div>
                     <p class="mb-4 text-sm text-gray-400 md:mb-6">Redefining how Africans experience and earn from entertainment.</p>
                     <div class="flex gap-3 md:gap-4">

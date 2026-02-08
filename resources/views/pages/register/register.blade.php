@@ -8,11 +8,8 @@
     <div class="relative w-full max-w-md">
         {{-- Logo --}}
         <div class="mb-6 flex justify-center">
-            <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-2">
-                <svg class="h-8 w-8 text-[#3d6363]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 7h18v2H3V7zm0 4h18v2H3v-2zm0 4h12v2H3v-2z"/>
-                </svg>
-                <span class="text-2xl font-bold text-white">Stream</span>
+            <a href="{{ route('home') }}" wire:navigate>
+                <img src="/images/logo.png" alt="Stream" class="h-12 w-auto">
             </a>
         </div>
 

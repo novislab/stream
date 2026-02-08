@@ -6,8 +6,8 @@
             <flux:card class="space-y-8">
                 {{-- Header --}}
                 <div class="text-center">
-                    <div class="mx-auto w-16 h-16 bg-zinc-900 dark:bg-white rounded-2xl flex items-center justify-center mb-6">
-                        <flux:icon name="play-circle" variant="solid" class="size-8 text-white dark:text-zinc-900" />
+                    <div class="mx-auto w-16 h-16 flex items-center justify-center mb-6">
+                        <img src="/images/logo.png" alt="Stream" class="w-16 h-auto">
                     </div>
                     <flux:heading size="xl">Welcome to Stream</flux:heading>
                     <flux:text class="mt-2">Create your admin account to get started.</flux:text>
@@ -69,8 +69,8 @@
             <flux:card class="space-y-8">
                 {{-- Header --}}
                 <div class="text-center">
-                    <div class="mx-auto w-16 h-16 bg-zinc-900 dark:bg-white rounded-2xl flex items-center justify-center mb-6">
-                        <flux:icon name="play-circle" variant="solid" class="size-8 text-white dark:text-zinc-900" />
+                    <div class="mx-auto w-16 h-16 flex items-center justify-center mb-6">
+                        <img src="/images/logo.png" alt="Stream" class="w-16 h-auto">
                     </div>
                     <flux:heading size="xl">Stream Admin</flux:heading>
                     <flux:text class="mt-2">Sign in to access the admin panel.</flux:text>
