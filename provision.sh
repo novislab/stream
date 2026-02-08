@@ -86,8 +86,8 @@ if [ -n "$GITHUB_SSH_KEY" ]; then
     ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
 fi
 
-# Clone private repository
-git clone git@github.com:novislap/stream.git /var/www/laravel
+# Clone repository
+git clone https://github.com/novislab/stream.git /var/www/laravel
 cd /var/www/laravel
 
 # Install PHP dependencies
