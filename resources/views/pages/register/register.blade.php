@@ -80,7 +80,7 @@
                 <div>
                     <div class="mb-1.5 flex items-center justify-between">
                         <label for="activationCode" class="text-sm font-medium text-gray-300">Activation Code</label>
-                        <a href="{{ route('payment') }}" wire:navigate class="text-xs text-[#3d6363] hover:text-[#315150] hover:underline">Get code</a>
+                        <a href="{{ route('payment') }}" wire:navigate class="text-xs text-[#3d6363] hover:text-[#315150] hover:underline">Get code here</a>
                     </div>
                     <input
                         type="text"
