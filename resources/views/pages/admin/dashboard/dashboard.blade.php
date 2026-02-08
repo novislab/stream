@@ -266,8 +266,8 @@
                                 <p class="text-xs text-zinc-500">Avg. Weekly</p>
                             </div>
                             <div>
-                                <p class="text-lg font-semibold">{{ number_format($this->thisMonthVisitors) }}</p>
-                                <p class="text-xs text-zinc-500">Avg. Monthly</p>
+                                <p class="text-lg font-semibold">{{ number_format($this->paymentCount) }}</p>
+                                <p class="text-xs text-zinc-500">Payments</p>
                             </div>
                         </div>
                     </div>
@@ -325,7 +325,7 @@
                                 </div>
                                 <span class="text-sm">This Month</span>
                             </div>
-                            <span class="text-lg font-semibold">{{ number_format($this->thisMonthVisitors) }}</span>
+                            <span class="text-lg font-semibold">{{ number_format($this->paymentCount) }}</span>
                         </div>
                     </div>
                 </div>

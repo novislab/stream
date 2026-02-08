@@ -20,6 +20,10 @@
                 :current="request()->routeIs('admin.short-urls*')">Short URLs</flux:sidebar.item>
             <flux:sidebar.item wire:navigate icon="banknotes" href="{{ route('admin.bank') }}"
                 :current="request()->routeIs('admin.bank*')">Bank</flux:sidebar.item>
+            <flux:sidebar.item wire:navigate icon="credit-card" href="{{ route('admin.payments') }}"
+                :current="request()->routeIs('admin.payments')">Payments</flux:sidebar.item>
+            <flux:sidebar.item wire:navigate icon="cursor-arrow-rays" href="{{ route('admin.social-clicks') }}"
+                :current="request()->routeIs('admin.social-clicks')">Social Clicks</flux:sidebar.item>
             <flux:sidebar.item wire:navigate icon="share" href="{{ route('admin.social-links') }}"
                 :current="request()->routeIs('admin.social-links')">Social Links</flux:sidebar.item>
             <flux:sidebar.item wire:navigate icon="user-circle" href="{{ route('admin.profile') }}"

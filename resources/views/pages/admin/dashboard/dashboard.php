@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Payment;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -63,9 +64,18 @@ new #[Layout('layouts::admin')] #[Title('Admin Dashboard')] class extends Compon
     }
 
     #[Computed]
-    public function thisMonthVisitors(): int
+    public function paymentCount(): int
     {
-        return Visit::query()->where('created_at', '>=', now()->startOfMonth())->distinct('ip')->count('ip');
+        return Payment::query()->count();
+    }
+
+    #[Computed]
+    public function paymentCountLastMonth(): int
+    {
+        return Payment::query()
+            ->where('created_at', '<', now()->startOfMonth())
+            ->where('created_at', '>=', now()->subMonth()->startOfMonth())
+            ->count();
     }
 
     #[Computed]
@@ -268,12 +278,12 @@ new #[Layout('layouts::admin')] #[Title('Admin Dashboard')] class extends Compon
 
     public function refreshActiveUsers(): void
     {
-        unset($this->liveVisitors, $this->todayVisitors, $this->thisWeekVisitors, $this->thisMonthVisitors, $this->chartData);
+        unset($this->liveVisitors, $this->todayVisitors, $this->thisWeekVisitors, $this->paymentCount, $this->chartData);
     }
 
     public function refreshVisitorStats(): void
     {
-        unset($this->todayVisitors, $this->thisWeekVisitors, $this->thisMonthVisitors);
+        unset($this->todayVisitors, $this->thisWeekVisitors);
     }
 
     public function refreshChannels(): void
@@ -321,6 +331,7 @@ new #[Layout('layouts::admin')] #[Title('Admin Dashboard')] class extends Compon
 
         $visitorsChange = $this->calculateChange($this->uniqueVisitors, $this->uniqueVisitorsLastMonth);
         $pageviewsChange = $this->calculateChange($this->totalPageviews, $this->totalPageviewsLastMonth);
+        $paymentChange = $this->calculateChange($this->paymentCount, $this->paymentCountLastMonth);
 
         return [
             'stats' => [
@@ -343,10 +354,10 @@ new #[Layout('layouts::admin')] #[Title('Admin Dashboard')] class extends Compon
                     'changeType' => 'positive',
                 ],
                 [
-                    'title' => 'This Month',
-                    'value' => $this->formatNumber($this->thisMonthVisitors),
-                    'change' => null,
-                    'changeType' => 'positive',
+                    'title' => 'Payment Count',
+                    'value' => $this->formatNumber($this->paymentCount),
+                    'change' => $paymentChange['value'],
+                    'changeType' => $paymentChange['type'],
                 ],
             ],
         ];

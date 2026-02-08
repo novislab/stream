@@ -99,8 +99,8 @@
             @endif
 
             {{-- Payment Button --}}
-            <button type="submit" class="w-full mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-[#315150] to-[#3d6363] px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-[#315150]/25 transition-all hover:scale-105" wire:click="makePayment">
-                I have make payment
+            <button type="submit" class="w-full mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-[#315150] to-[#3d6363] px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-[#315150]/25 transition-all hover:scale-105" wire:click="recordPayment">
+                I have made payment
             </button>
 
             {{-- Security Note --}}
